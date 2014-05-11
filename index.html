@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<script src="js/jquery-1.11.1.js"></script>
+		<script src="js/underscore.js"></script>
+		<script src="js/backbone.js"></script>
+		<script src="js/createjs-2013.12.12.min.js"></script>
+		
+		<script>
+			// declare variables here 
+			//may refactor to cut down on globals
+			var stage;			
+			var canvas;
+			var sculptures = [];
+			var sculptureCt = 1;
+			//json object array that will hold waypoint info
+			var wayPoints;
+			//loading queue for any kind of audio
+			//it's likely that we'll be downloading audio from soundcloud
+			//soundcloud may be buffered though..
+			/*
+			var queue = new createjs.LoadQueue(true);
+			queue.installPlugin(createjs.Sound);
+			createjs.Sound.alternateExtensions = ['mp3'];
+			queue.on('complete', handleComplete, this);
+			queue.on('progress', progressTick);
+			queue.loadManifest([
+				{id: 'sound1', src: 'audio/sound1.mp3'}
+				]);
+				
+				*/
+			// Set a function to run on document load
+			$(document).ready(function(){
+				//define canvas set up the stage
+				canvas = $('#whisperCan')[0];
+				resizeCan();
+				stage = new createjs.Stage(canvas);
+				//set up and position five images initially
+				for(var i=0; i<sculptureCt; i++){
+					//define each sculpture as a createjs bitmap
+					sculptures[i] = new createjs.Bitmap('images/sculpture.png');
+					sculptures[i].regX = 82;
+					sculptures[i].regY = 150;
+					sculptures[i].x = $(canvas).width()/2;
+					sculptures[i].y =$(canvas).height()/2;
+					sculptures[i].scaleX  = sculptures[i].scaleY = .5;
+					
+					stage.addChild(sculptures[i]);
+					stage.update();
+					createjs.Ticker.setFPS(8);
+					createjs.Ticker.addEventListener('tick', drawNewFrame);
+					
+				}
+			
+			});
+			
+			//set a function to run on window resize
+			$(window).resize(function(){
+				//resizeCan();
+			});
+			
+			//function that runs when the loadqueue is completed
+			function handleComplete(){
+				//createjs.Sound.play('sound1');
+			}
+			//function that runs when progress is recorded in the preload
+			function progressTick(evt){
+				console.log(evt.progress*100 + "% loaded");
+			}
+			
+			//helper function to resize canvas
+			function resizeCan(){
+				//$('#whisperCan').css('width', '100%');
+				//$('#whiserCan').css('height', '100%');
+				//$('#whisperCan').attr('width', window.innerWidth);
+				//$('#whisperCan').attr('height', window.innerHeight);
+			}
+			//calculate waypoint values based on a count
+			function calcWp(ct){
+				var wp = [];
+				for(var i = 0; i<ct; i++){
+					var o = {};
+					o.x = $(canvas).width()/ct * i;
+					//frame the y range for placement
+					var yt = $(canvas).height()/.66;
+					var yb = $(canvas).height()/.33;
+					
+					//determine scaling and alpha based on y placement
+					//push the object to the end of the array
+					wp.push(o);
+				}
+				//reorder the array based on y placement and x proximity to the middle
+				return wp;
+			}
+			function drawNewFrame(evt){
+			
+				stage.update();	
+			}
+			
+			
+		</script>
+		
+		<style>
+			#whisperCan{
+			
+				/*width:100%;
+				height:100%;*/
+				width:640px;
+				height:360px;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="whisperCan" width="640" height="360">You need an HTML5-enabled browser to view this content.</canvas>
+	</body>
+
+</html>
