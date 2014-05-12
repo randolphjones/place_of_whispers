@@ -51,6 +51,7 @@
 					sculptures[i].x = wayPoints[i].x;
 					sculptures[i].y = wayPoints[i].y;
 					sculptures[i].scaleX  = sculptures[i].scaleY = wayPoints[i].scale;
+					sculptures[i].alpha = wayPoints[i].alpha;
 					
 					stage.addChild(sculptures[i]);
 					stage.update();
@@ -93,14 +94,39 @@
 					//frame the y range for placement
 					var yt = $(canvas).height()*.66;
 					var yb = $(canvas).height()*.33;
-					//o.y = Math.random() * yt/2 + yb ;
-					o.y = (Math.sin(o.x)* yt/2) + yb;
-					o.scale = map_range(o.y, yb, yt, .25, .5);
+					
+					
+					
+					//populate waypoints manually for now
+					//find algorithm if there's time...
+					switch(i){
+						case 0:
+							o.y = $(canvas).height()*.5;
+							break;
+						case 1:
+							o.y = $(canvas).height()*.33;
+							break;
+						case 2:
+							o.y = $(canvas).height()*.66;
+							break;				
+						case 3:
+							o.y = $(canvas).height()*.33;
+							break;			
+						case 4:
+							o.y = $(canvas).height()*.5;
+							break;
+					}
 					//determine scaling and alpha based on y placement
+					o.scale = map_range(o.y, yb, yt, .45, .75);
+					o.alpha = map_range(o.y, yb, yt, .6, 1.0);
+					
 					//push the object to the end of the array
 					wp.push(o);
 				}
 				//reorder the array based on y placement and x proximity to the middle
+				//reorder manually for now
+				wp = [wp[2], wp[0], wp[1], wp[3], wp[4]];
+				
 				return wp;
 			}
 			function drawNewFrame(evt){
@@ -120,14 +146,15 @@
 			#whisperCan{
 			
 				/*width:100%;
-				height:100%;*/
+				height:100%;
 				width:640px;
 				height:360px;
+				*/
 			}
 		</style>
 	</head>
 	<body>
-		<canvas id="whisperCan" width="640" height="360">You need an HTML5-enabled browser to view this content.</canvas>
+		<canvas id="whisperCan" width="900" height="360">You need an HTML5-enabled browser to view this content.</canvas>
 	</body>
 
 </html>
