@@ -19,6 +19,8 @@
 			var margin = .05;
 			//json object array that will hold waypoint info
 			var wayPoints;
+			//waypoint speed
+			var speed =5000;
 			//loading queue for any kind of audio
 			//it's likely that we'll be downloading audio from soundcloud
 			//soundcloud may be buffered though..
@@ -59,7 +61,15 @@
 					createjs.Ticker.addEventListener('tick', drawNewFrame);
 					
 				}
+				sculptures = [sculptures[2], sculptures[0], sculptures[1], sculptures[3], sculptures[4]];
 			
+				for(var i = 0; i < sculptureCt; i++){
+					if((i+1)>=sculptureCt){
+						rotateNext(i, 0);
+					}else{
+						rotateNext(i, i+1);
+					}
+				}
 			});
 			
 			//set a function to run on window resize
@@ -139,6 +149,28 @@
 				return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 			}
 			
+			
+			
+			//a recursive function that tweens the rotation of each sculpture
+			function rotateNext(s, p){
+			
+				if(p>=sculptureCt){
+					p=0;
+				}
+			
+				//console.log('call!');
+				createjs.Tween.get(sculptures[s],
+					{override:true,
+					//loop:true
+					})
+					.to({x: wayPoints[p].x,
+						y: wayPoints[p].y, 
+						scaleX: wayPoints[p].scale, 
+						scaleY: wayPoints[p].scale, 
+						alpha: wayPoints[p].alpha}, 
+						speed, createjs.Ease.EaseIn)
+						.call(function(){rotateNext(s, p+1)});
+			}
 			
 		</script>
 		
