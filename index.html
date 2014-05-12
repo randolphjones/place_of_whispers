@@ -14,7 +14,9 @@
 			var stage;			
 			var canvas;
 			var sculptures = [];
-			var sculptureCt = 1;
+			var sculptureCt = 5;
+			//how much margin is on the edges to buffer the sculptures
+			var margin = .05;
 			//json object array that will hold waypoint info
 			var wayPoints;
 			//loading queue for any kind of audio
@@ -37,15 +39,18 @@
 				canvas = $('#whisperCan')[0];
 				resizeCan();
 				stage = new createjs.Stage(canvas);
+				
+				wayPoints = calcWp(sculptureCt);
+				console.log(wayPoints);
 				//set up and position five images initially
 				for(var i=0; i<sculptureCt; i++){
 					//define each sculpture as a createjs bitmap
 					sculptures[i] = new createjs.Bitmap('images/sculpture.png');
 					sculptures[i].regX = 82;
 					sculptures[i].regY = 150;
-					sculptures[i].x = $(canvas).width()/2;
-					sculptures[i].y =$(canvas).height()/2;
-					sculptures[i].scaleX  = sculptures[i].scaleY = .5;
+					sculptures[i].x = wayPoints[i].x;
+					sculptures[i].y = wayPoints[i].y;
+					sculptures[i].scaleX  = sculptures[i].scaleY = wayPoints[i].scale;
 					
 					stage.addChild(sculptures[i]);
 					stage.update();
@@ -80,13 +85,17 @@
 			//calculate waypoint values based on a count
 			function calcWp(ct){
 				var wp = [];
+				var canWid = $(canvas).width();
 				for(var i = 0; i<ct; i++){
 					var o = {};
-					o.x = $(canvas).width()/ct * i;
+					//o.x = $(canvas).width()/ct * i;
+					o.x =  (((canWid - (canWid * margin*2))/ct)*i)+ (canWid * margin);
 					//frame the y range for placement
-					var yt = $(canvas).height()/.66;
-					var yb = $(canvas).height()/.33;
-					
+					var yt = $(canvas).height()*.66;
+					var yb = $(canvas).height()*.33;
+					//o.y = Math.random() * yt/2 + yb ;
+					o.y = (Math.sin(o.x)* yt/2) + yb;
+					o.scale = map_range(o.y, yb, yt, .25, .5);
 					//determine scaling and alpha based on y placement
 					//push the object to the end of the array
 					wp.push(o);
@@ -97,6 +106,11 @@
 			function drawNewFrame(evt){
 			
 				stage.update();	
+			}
+			
+			//function for remaping values
+			function map_range(value, low1, high1, low2, high2) {
+				return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 			}
 			
 			
