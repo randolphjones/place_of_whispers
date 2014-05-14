@@ -15,8 +15,10 @@
 			var canvas;
 			var sculptures = [];
 			var sculptureCt = 5;
+			//scale factor for the sculptures based on a normal screen width
+			var sculptureScaleFac = 670;
 			//how much margin is on the edges to buffer the sculptures
-			var margin = .05;
+			var margin = .1;
 			//json object array that will hold waypoint info
 			var wayPoints;
 			//waypoint speed
@@ -37,13 +39,17 @@
 				*/
 			// Set a function to run on document load
 			$(document).ready(function(){
+				var w = $(window).innerWidth();
+				var h = $(window).innerHeight();
+				$('#main').append('<canvas id="whisperCan" width="'+w+'" height="'+h+'">You need an HTML5-enabled browser to view this content.</canvas>');
+			
 				//define canvas set up the stage
 				canvas = $('#whisperCan')[0];
 				resizeCan();
 				stage = new createjs.Stage(canvas);
 				
 				wayPoints = calcWp(sculptureCt);
-				console.log(wayPoints);
+				//console.log(wayPoints);
 				//set up and position five images initially
 				for(var i=0; i<sculptureCt; i++){
 					//define each sculpture as a createjs bitmap
@@ -99,8 +105,8 @@
 				var canWid = $(canvas).width();
 				for(var i = 0; i<ct; i++){
 					var o = {};
-					//o.x = $(canvas).width()/ct * i;
-					o.x =  (((canWid - (canWid * margin*2))/ct)*i)+ (canWid * margin);
+					//o.x = $(canvas).width()/(ct-1) * i;
+					o.x =  (((canWid - (canWid * margin*2))/(ct-1))*i)+ (canWid * margin);
 					//frame the y range for placement
 					var yt = $(canvas).height()*.66;
 					var yb = $(canvas).height()*.33;
@@ -127,7 +133,8 @@
 							break;
 					}
 					//determine scaling and alpha based on y placement
-					o.scale = map_range(o.y, yb, yt, .45, .75);
+					o.scale = map_range(o.y, yb, yt, .45*canWid/sculptureScaleFac, .75*canWid/sculptureScaleFac);
+					//o.scale = map_range(o.y, yb, yt, .45, .75);
 					o.alpha = map_range(o.y, yb, yt, .6, 1.0);
 					
 					//push the object to the end of the array
@@ -168,7 +175,7 @@
 						scaleX: wayPoints[p].scale, 
 						scaleY: wayPoints[p].scale, 
 						alpha: wayPoints[p].alpha}, 
-						speed, createjs.Ease.EaseIn)
+						speed, createjs.Ease.linear)
 						.call(function(){rotateNext(s, p+1)});
 			}
 			
@@ -186,7 +193,9 @@
 		</style>
 	</head>
 	<body>
-		<canvas id="whisperCan" width="900" height="360">You need an HTML5-enabled browser to view this content.</canvas>
+		<div id="main">
+			<!--<canvas id="whisperCan" width="900" height="360">You need an HTML5-enabled browser to view this content.</canvas>-->
+		</div>
 	</body>
 
 </html>
