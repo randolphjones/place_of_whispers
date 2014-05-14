@@ -39,9 +39,11 @@
 				*/
 			// Set a function to run on document load
 			$(document).ready(function(){
-				var w = $(window).innerWidth();
-				var h = $(window).innerHeight();
-				$('#main').append('<canvas id="whisperCan" width="'+w+'" height="'+h+'">You need an HTML5-enabled browser to view this content.</canvas>');
+				//var w = $(window).innerWidth();
+				//var h = $(window).innerHeight();				
+				var w = $('#canHolder').width();
+				var h = $('#canHolder').height();
+				$('#canHolder').append('<canvas id="whisperCan" width="'+w+'" height="'+h+'">You need an HTML5-enabled browser to view this content.</canvas>');
 			
 				//define canvas set up the stage
 				canvas = $('#whisperCan')[0];
@@ -164,6 +166,14 @@
 				if(p>=sculptureCt){
 					p=0;
 				}
+				if(p==sculptureCt){
+				//always draw the sculpture at the correct index
+					stage.setChildIndex(sculptures[s], 0);
+				}
+				if(p==0){
+				//always draw the sculpture at the correct index
+					stage.setChildIndex(sculptures[s], sculptureCt);
+				}
 			
 				//console.log('call!');
 				createjs.Tween.get(sculptures[s],
@@ -182,6 +192,9 @@
 		</script>
 		
 		<style>
+			body{
+				font-size:18px;
+			}
 			#whisperCan{
 			
 				/*width:100%;
@@ -190,11 +203,32 @@
 				height:360px;
 				*/
 			}
+			#main{
+				width:100%;
+				height:900px;
+			}
+			
+			#canHolder{
+				width:100%;
+				height:66%;
+			}
+			#header{
+				width:100%;
+				height: 100px;
+				color: #444444;
+				font-size:2.5em;
+				font-family: Myriad Pro, Helvetica, Arial, sans-serif;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="main">
-			<!--<canvas id="whisperCan" width="900" height="360">You need an HTML5-enabled browser to view this content.</canvas>-->
+			<div id="header">
+				The Place of Whispers
+			</div>
+			<div id="canHolder">
+				<!--<canvas id="whisperCan" width="900" height="360">You need an HTML5-enabled browser to view this content.</canvas>-->
+			</div>
 		</div>
 	</body>
 
