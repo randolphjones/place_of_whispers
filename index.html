@@ -31,21 +31,24 @@
 			//whisper shapes and graphics
 			var whsh;
 			var whg;
-			var whcolor = '#B9D8FA';
+			//var whcolor = '#B9D8FA';
+			var whrgb = [185, 216, 250];
 			var sc; 
+			
+			var blurFilter;
 			
 			//whisper objects and logic
 			var whispers = [];
-			var whCount = 5;
+			var whCount = 10;
 			var attractor;
-			var whSize = 8;
+			var whSize = 3;
 			var tail = 25;
 			
 			
 			var frameRate = 24;
 			var velocity = 8;
 			var acceleration = frameRate/24*5;
-			var tSpeed = 6;	
+			var tSpeed = 6.5;	
 			var intervalSwitch = 5000;
 			//loading queue for any kind of audio
 			//it's likely that we'll be downloading audio from soundcloud
@@ -72,6 +75,9 @@
 				w = $('#canHolder').width();
 				h = $('#canHolder').height()*.66;
 				$('#canHolder').append('<canvas id="whisperCan" width="'+w+'" height="'+h+'">You need an HTML5-enabled browser to view this content.</canvas>');
+			
+			
+				
 			
 				//define canvas set up the stage
 				canvas = $('#whisperCan')[0];
@@ -103,6 +109,9 @@
 					sculptures[i].alpha = wayPoints[i].alpha;
 					
 					stage.addChild(sculptures[i]);
+					
+					//add a placeholder for an event listener for each sculpture
+					sculptures[i].addEventListener('mousedown', function(evt){console.log('you clicked on a sculpture')});;
 				}
 				//set each sculpture in motion with a recursive function
 				for(var i = 0; i < sculptureCt; i++){
@@ -117,8 +126,15 @@
 				whg =  new createjs.Graphics();
 				whsh = new createjs.Shape(whg);
 				//add the drawing context to the stage
+				whsh.alpha=.95;
 				stage.addChild(whsh);
 				
+				
+				
+				//blurFilter = new createjs.BlurFilter(12, 12, 1);
+				
+				//whsh.filters = [blurFilter];
+				//whsh.cache(0,0,w,h);
 				//swarm logic
 				//set up a test attractor;
 				attractor = $V([200, 100]);
@@ -249,7 +265,7 @@
 				}
 				if(p==0){
 				//always draw the sculpture at the correct index
-					stage.setChildIndex(sculptures[s], sculptureCt);
+					//stage.setChildIndex(sculptures[s], sculptureCt);
 				}
 			
 				//console.log('call!');
@@ -268,8 +284,11 @@
 			
 			//the class that constitutes a single whisper
 			function Whisper(x, y, v, a, t, s){
-				this.locale = $V([x, y]);
-				this.lastLocale = $V([x, y]);
+				this.locale = [];
+				for(i = 0; i<tail; i++){
+					this.locale.push($V([x, y]));
+				}
+				//this.lastLocale = $V([x, y]);
 				this.velocity = $V([v, v]);
 				this.acceleration = $V([a, a]);
 				this.acc = a;
@@ -277,9 +296,10 @@
 				this.size = s;
 				this.update = function(){
 					var ts = this.topSpeed;	
-					this.lastLocale = this.locale;
 					
-					var dir = attractor.subtract(this.locale);
+					//this.lastLocale = this.locale[0];
+					
+					var dir = attractor.subtract(this.locale[tail-1]);
 					//normalize the vector
 					var length = Math.sqrt((dir.elements[0]*dir.elements[0])+(dir.elements[1] * dir.elements[1]));
 					dir = dir.map(function(x){return x/Math.abs(length)});
@@ -298,19 +318,32 @@
 						}
 					});
 					//console.log(this.velocity.elements[0]);
-					this.locale = this.locale.add(this.velocity);
+					this.locale.push( this.locale[tail-1].add(this.velocity));
+					this.locale.splice(0,1);
 					//this.locale = attractor;
 					//console.log('you\'ve been moved');
+					
 				}
 				
 				this.render = function(){
 					//console.log('you\'ve been rendered');
-					var lv = this.lastLocale.elements;
-					var v = this.locale.elements;
+					for(i=1; i<tail; i++){
+						//lolerz! windshield wipers!
+						var lv = this.locale[i-1].elements;
+						var v = this.locale[i].elements;
+						
+						var whcol = 'rgba('+
+						whrgb[0]+
+						','+ 
+						whrgb[1]+
+						','+
+						whrgb[2]+
+						','+ 
+						(1/(tail-i)+.3)+ 
+						')';
 					
-					
-				
-					whg.s(whcolor).ss(this.size).mt(lv[0],lv[1]).lt(v[0], v[1]);
+						whg.s(whcol).ss(this.size).mt(lv[0],lv[1]).lt(v[0], v[1]);
+					}			
 					
 					
 				}
