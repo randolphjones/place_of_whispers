@@ -50,6 +50,11 @@
 			var acceleration = frameRate/24*5;
 			var tSpeed = 6.5;	
 			var intervalSwitch = 5000;
+			
+			
+			//set up vars for routing
+			var router;
+			
 			//loading queue for any kind of audio
 			//it's likely that we'll be downloading audio from soundcloud
 			//soundcloud may be buffered though..
@@ -66,6 +71,37 @@
 				*/
 			// Set a function to run on document load
 			$(document).ready(function(){
+				//routing logic
+				var Router = Backbone.Router.extend({
+					routes: {
+						'participate': 'participate',
+						'experience': 'experience',
+						'about': 'about',
+						'schedule': 'schedule',
+						'gallery': 'gallery'
+					
+					}, 
+					participate: function(){
+					
+						console.log('participation page!');
+					},
+					experience: function(){
+						console.log('experience page!');
+					},
+					about: function(){
+						console.log('about page!');
+					},
+					schedule: function(){
+						console.log('schedule page!');
+					},
+					gallery: function(){
+						console.log('gallery page!');
+					}
+				});
+				//initialize router and bind it to the history
+				router = new Router();
+				Backbone.history.start();
+			
 			
 				//sizing logic
 				//only works for a desktop with a horizontal aspect ratio right now
@@ -352,7 +388,11 @@
 			
 			//A function that move the attractor to any number of possible location options
 			function setAttractor(){
-				sc = sculptures[Math.floor(Math.random()*sculptureCt)];
+				var scLast = sc;
+				//keep choosing a random sculpture until it's different than the last one.
+				while(sc == scLast){
+					sc = sculptures[Math.floor(Math.random()*sculptureCt)];
+				}
 			}
 			
 			function moveAttractor(){
