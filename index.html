@@ -7,12 +7,16 @@
 		<script src="js/underscore.js"></script>
 		<script src="js/backbone.js"></script>
 		<script src="js/createjs-2013.12.12.min.js"></script>
+		<script src="js/sylvester.js"></script>
+		
 		
 		<script>
 			// declare variables here 
 			//may refactor to cut down on globals
 			var stage;			
 			var canvas;
+			var w;
+			var h;
 			var sculptures = [];
 			var sculptureCt = 5;
 			//scale factor for the sculptures based on a normal screen width
@@ -21,8 +25,28 @@
 			var margin = .1;
 			//json object array that will hold waypoint info
 			var wayPoints;
-			//waypoint speed
-			var speed =5000;
+			//waypoint / rotation speed
+			var speed =10000;
+			
+			//whisper shapes and graphics
+			var whsh;
+			var whg;
+			var whcolor = '#B9D8FA';
+			var sc; 
+			
+			//whisper objects and logic
+			var whispers = [];
+			var whCount = 5;
+			var attractor;
+			var whSize = 8;
+			var tail = 25;
+			
+			
+			var frameRate = 24;
+			var velocity = 8;
+			var acceleration = frameRate/24*5;
+			var tSpeed = 6;	
+			var intervalSwitch = 5000;
 			//loading queue for any kind of audio
 			//it's likely that we'll be downloading audio from soundcloud
 			//soundcloud may be buffered though..
@@ -39,10 +63,14 @@
 				*/
 			// Set a function to run on document load
 			$(document).ready(function(){
+			
+				//sizing logic
+				//only works for a desktop with a horizontal aspect ratio right now
+				//will eventually add logic to size and configure specifically for mobile.
 				//var w = $(window).innerWidth();
 				//var h = $(window).innerHeight();				
-				var w = $('#canHolder').width();
-				var h = $('#canHolder').height();
+				w = $('#canHolder').width();
+				h = $('#canHolder').height()*.66;
 				$('#canHolder').append('<canvas id="whisperCan" width="'+w+'" height="'+h+'">You need an HTML5-enabled browser to view this content.</canvas>');
 			
 				//define canvas set up the stage
@@ -58,19 +86,25 @@
 					sculptures[i] = new createjs.Bitmap('images/sculpture.png');
 					sculptures[i].regX = 82;
 					sculptures[i].regY = 150;
+					
+					
+					
+				}
+				
+				//re-sort the array to more accurately reflect the animation order of the sculptures
+				sculptures = [sculptures[2], sculptures[0], sculptures[1], sculptures[3], sculptures[4]];
+				
+				//now that they're placed in the appropriate order, they can be placed on the stage
+				for(var i = 0; i < sculptures.length; i++){
+					
 					sculptures[i].x = wayPoints[i].x;
 					sculptures[i].y = wayPoints[i].y;
 					sculptures[i].scaleX  = sculptures[i].scaleY = wayPoints[i].scale;
 					sculptures[i].alpha = wayPoints[i].alpha;
 					
 					stage.addChild(sculptures[i]);
-					stage.update();
-					createjs.Ticker.setFPS(8);
-					createjs.Ticker.addEventListener('tick', drawNewFrame);
-					
 				}
-				sculptures = [sculptures[2], sculptures[0], sculptures[1], sculptures[3], sculptures[4]];
-			
+				//set each sculpture in motion with a recursive function
 				for(var i = 0; i < sculptureCt; i++){
 					if((i+1)>=sculptureCt){
 						rotateNext(i, 0);
@@ -78,6 +112,34 @@
 						rotateNext(i, i+1);
 					}
 				}
+				
+				//initialize a context for drawing graphics dynamically for the whispers
+				whg =  new createjs.Graphics();
+				whsh = new createjs.Shape(whg);
+				//add the drawing context to the stage
+				stage.addChild(whsh);
+				
+				//swarm logic
+				//set up a test attractor;
+				attractor = $V([200, 100]);
+				for(var i=0; i<whCount; i++){
+					//set up the whispers initially
+					whispers.push(new Whisper(Math.random() * w, 
+					Math.random() * h,
+					velocity,
+					acceleration,
+					tSpeed,
+					Math.random() * whSize));
+				}
+				
+				//update the stage initially
+				//stage.update();
+				//set the ticker and framerate
+				createjs.Ticker.setFPS(frameRate);
+				createjs.Ticker.addEventListener('tick', drawNewFrame);
+				
+				setAttractor();
+				setInterval(function(){ setAttractor()}, intervalSwitch);
 			});
 			
 			//set a function to run on window resize
@@ -149,8 +211,23 @@
 				return wp;
 			}
 			function drawNewFrame(evt){
-			
+				//testing out the graphics generation	//whg.s('#B9D8FA').ss(3).mt(0,0).lt(Math.random() * 500, Math.random() * 300);
+				
+				//update the whisper swarm
+				//draw the whisper swarm into the graphics context
+				
+				whg.clear();
+				for(var i=0; i<whispers.length; i++){
+					whispers[i].update();
+					
+					whispers[i].render();
+				}
+				
+				moveAttractor();
+				
 				stage.update();	
+				
+				
 			}
 			
 			//function for remaping values
@@ -168,7 +245,7 @@
 				}
 				if(p==sculptureCt){
 				//always draw the sculpture at the correct index
-					stage.setChildIndex(sculptures[s], 0);
+					//stage.setChildIndex(sculptures[s], 0);
 				}
 				if(p==0){
 				//always draw the sculpture at the correct index
@@ -187,6 +264,67 @@
 						alpha: wayPoints[p].alpha}, 
 						speed, createjs.Ease.linear)
 						.call(function(){rotateNext(s, p+1)});
+			}
+			
+			//the class that constitutes a single whisper
+			function Whisper(x, y, v, a, t, s){
+				this.locale = $V([x, y]);
+				this.lastLocale = $V([x, y]);
+				this.velocity = $V([v, v]);
+				this.acceleration = $V([a, a]);
+				this.acc = a;
+				this.topSpeed = t;
+				this.size = s;
+				this.update = function(){
+					var ts = this.topSpeed;	
+					this.lastLocale = this.locale;
+					
+					var dir = attractor.subtract(this.locale);
+					//normalize the vector
+					var length = Math.sqrt((dir.elements[0]*dir.elements[0])+(dir.elements[1] * dir.elements[1]));
+					dir = dir.map(function(x){return x/Math.abs(length)});
+					dir.multiply(this.acc);
+					
+					this.acceleration = dir;
+					this.velocity = this.velocity.add(this.acceleration);
+					//set limit to top speed here
+					this.velocity = this.velocity.map(function(q){
+						if(q > ts){
+							return ts;
+						}else if(q<ts*-1){
+							return ts*-1;
+						}else{
+							return q;
+						}
+					});
+					//console.log(this.velocity.elements[0]);
+					this.locale = this.locale.add(this.velocity);
+					//this.locale = attractor;
+					//console.log('you\'ve been moved');
+				}
+				
+				this.render = function(){
+					//console.log('you\'ve been rendered');
+					var lv = this.lastLocale.elements;
+					var v = this.locale.elements;
+					
+					
+				
+					whg.s(whcolor).ss(this.size).mt(lv[0],lv[1]).lt(v[0], v[1]);
+					
+					
+				}
+			
+			}
+			
+			//A function that move the attractor to any number of possible location options
+			function setAttractor(){
+				sc = sculptures[Math.floor(Math.random()*sculptureCt)];
+			}
+			
+			function moveAttractor(){
+				
+				attractor = $V([sc.x, sc.y]);
 			}
 			
 		</script>
