@@ -28,6 +28,10 @@
 			//waypoint / rotation speed
 			var speed =10000;
 			
+			//highlighted sculpture sprite
+			var sculpturehl;
+			var topAlpha = .75;
+			
 			//whisper shapes and graphics
 			var whsh;
 			var whg;
@@ -42,7 +46,7 @@
 			var whCount = 10;
 			var attractor;
 			var whSize = 3;
-			var tail = 25;
+			var tail = 15;
 			
 			
 			var frameRate = 24;
@@ -158,6 +162,26 @@
 					}
 				}
 				
+				//logic for the highlighted sculpture
+				sculpturehl = new createjs.Bitmap('images/sculpture_hl.png');
+				sculpturehl.regX = 82;
+					sculpturehl.regY = 150;
+				
+				//set the initial alpha value for the highlight to 0
+				sculpturehl.alpha = 0;
+				
+				//add a property to the highlight that holds the index value for the sculpture that the highlight will be attached to
+				sculpturehl.attInd = 0;
+				sculpturehl.update = function(ind){
+					this.x = sculptures[ind].x;
+					this.y = sculptures[ind].y;
+					this.scaleX = this.scaleY = sculptures[ind].scaleX;
+					//this.alpha = sculptures[ind].alpha;	
+					
+				}
+				sculpturehl.update(sculpturehl.attInd);
+				stage.addChild(sculpturehl);
+				
 				//initialize a context for drawing graphics dynamically for the whispers
 				whg =  new createjs.Graphics();
 				whsh = new createjs.Shape(whg);
@@ -263,7 +287,7 @@
 				return wp;
 			}
 			function drawNewFrame(evt){
-				//testing out the graphics generation	//whg.s('#B9D8FA').ss(3).mt(0,0).lt(Math.random() * 500, Math.random() * 300);
+	
 				
 				//update the whisper swarm
 				//draw the whisper swarm into the graphics context
@@ -275,7 +299,13 @@
 					whispers[i].render();
 				}
 				
+				//move the attractor to where it needs to go
 				moveAttractor();
+				
+				//move and scale highlight per frame
+				
+				sculpturehl.update(sculpturehl.attInd);
+				
 				
 				stage.update();	
 				
@@ -393,11 +423,20 @@
 				while(sc == scLast){
 					sc = sculptures[Math.floor(Math.random()*sculptureCt)];
 				}
+				
+				createjs.Tween.get(sculpturehl, {override:true})
+				.to({alpha:0} ,500).call(function(){
+					sculpturehl.attInd = _.indexOf(sculptures, sc);
+					createjs.Tween.get(sculpturehl,{override:true}).to({alpha:topAlpha}, 500);
+				
+				});
 			}
 			
 			function moveAttractor(){
 				
 				attractor = $V([sc.x, sc.y]);
+
+				
 			}
 			
 		</script>
