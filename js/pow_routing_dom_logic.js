@@ -1,4 +1,7 @@
 //routing and DOM logic
+//set up vars for routing
+var router;
+
 function buildRouter(){
 	var Router = Backbone.Router.extend({
 		routes: {

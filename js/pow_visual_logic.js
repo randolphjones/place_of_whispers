@@ -7,6 +7,13 @@
 			var h;
 			var sculptures = [];
 			var sculptureCt = 5;
+			//names of sculptures/routes
+			var topics = ['participate',
+			'experience',
+			'about',
+			'schedule',
+			'gallery',]
+			
 			//scale factor for the sculptures based on a normal screen width
 			var sculptureScaleFac = 670;
 			//how much margin is on the edges to buffer the sculptures
@@ -20,10 +27,13 @@
 			var sculpturehl;
 			var topAlpha = .75;
 			
+			//text for highlighted area
+			var topicTxt;
+			
 			//whisper shapes and graphics
 			var whsh;
 			var whg;
-			//var whcolor = '#B9D8FA';
+			var whhex = '#B9D8FA';
 			var whrgb = [185, 216, 250];
 			var sc; 
 			
@@ -44,23 +54,8 @@
 			var intervalSwitch = 5000;
 			
 			
-			//set up vars for routing
-			var router;
+
 			
-			//loading queue for any kind of audio
-			//it's likely that we'll be downloading audio from soundcloud
-			//soundcloud may be buffered though..
-			/*
-			var queue = new createjs.LoadQueue(true);
-			queue.installPlugin(createjs.Sound);
-			createjs.Sound.alternateExtensions = ['mp3'];
-			queue.on('complete', handleComplete, this);
-			queue.on('progress', progressTick);
-			queue.loadManifest([
-				{id: 'sound1', src: 'audio/sound1.mp3'}
-				]);
-				
-				*/
 			// Set a function to run on document load
 			$(document).ready(function(){
 				buildRouter();
@@ -88,7 +83,9 @@
 					sculptures[i] = new createjs.Bitmap('images/sculpture.png');
 					sculptures[i].regX = 82;
 					sculptures[i].regY = 150;
-					
+					if(topics[i]){
+						sculptures[i].topic = topics[i];
+					}
 					
 					
 				}
@@ -163,6 +160,12 @@
 					tSpeed,
 					Math.random() * whSize));
 				}
+				
+				
+				//add the topic text as well
+				topicTxt = new createjs.Text('', '25px Myriad Pro', 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
+				topicTxt.textAlign = 'center';
+				stage.addChild(topicTxt);				
 				
 				//update the stage initially
 				//stage.update();
@@ -382,7 +385,15 @@
 				
 				createjs.Tween.get(sculpturehl, {override:true})
 				.to({alpha:0} ,500).call(function(){
-					sculpturehl.attInd = _.indexOf(sculptures, sc);
+				
+				//need to sort this out so the sequence is correct...
+					createjs.Tween.get(topicTxt, {override:true})
+					.to({alpha:0}, 500)
+					.call(function(){
+						sculpturehl.attInd = _.indexOf(sculptures, sc);
+						sculpturehl.topic = sculptures[sculpturehl.attInd].topic;
+						createjs.Tween.get(topicTxt, {override:true}).to({alpha:1}, 500);
+					});
 					createjs.Tween.get(sculpturehl,{override:true}).to({alpha:topAlpha}, 500);
 				
 				});
@@ -391,6 +402,11 @@
 			function moveAttractor(){
 				
 				attractor = $V([sc.x, sc.y]);
-
+			
+				//change topic text
+				topicTxt.x = sculpturehl.x;
+				topicTxt.text = sculpturehl.topic;
+				//topicTxt.y = attractor.elements[1];
+				
 				
 			}
