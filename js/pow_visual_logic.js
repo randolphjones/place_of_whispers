@@ -145,6 +145,12 @@
 				//initialize a context for drawing graphics dynamically for the whispers
 				whg =  new createjs.Graphics();
 				whsh = new createjs.Shape(whg);
+				
+				//recalibrate sizing dynamically to the screen size
+				whSize = 3/745 * w;
+				tSpeed = 6.5/745 * w;
+				
+				
 				//add the drawing context to the stage
 				whsh.alpha=.95;
 				stage.addChild(whsh);
