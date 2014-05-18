@@ -70,13 +70,14 @@
 			
 				
 			
-				//define canvas set up the stage
+				//define canvas and set up the stage
 				canvas = $('#whisperCan')[0];
 				resizeCan();
 				stage = new createjs.Stage(canvas);
 				
+				//set up waypoints for tweening
 				wayPoints = calcWp(sculptureCt);
-				//console.log(wayPoints);
+				
 				//set up and position five images initially
 				for(var i=0; i<sculptureCt; i++){
 					//define each sculpture as a createjs bitmap
@@ -104,7 +105,9 @@
 					stage.addChild(sculptures[i]);
 					
 					//add a placeholder for an event listener for each sculpture
-					sculptures[i].addEventListener('mousedown', function(evt){console.log('you clicked on a sculpture')});;
+					sculptures[i].addEventListener('mousedown', function(evt){
+					routeMe(evt.currentTarget.topic);
+					});
 				}
 				//set each sculpture in motion with a recursive function
 				for(var i = 0; i < sculptureCt; i++){
@@ -118,7 +121,7 @@
 				//logic for the highlighted sculpture
 				sculpturehl = new createjs.Bitmap('images/sculpture_hl.png');
 				sculpturehl.regX = 82;
-					sculpturehl.regY = 150;
+				sculpturehl.regY = 150;
 				
 				//set the initial alpha value for the highlight to 0
 				sculpturehl.alpha = 0;
@@ -130,6 +133,10 @@
 					this.y = sculptures[ind].y;
 					this.scaleX = this.scaleY = sculptures[ind].scaleX;
 					//this.alpha = sculptures[ind].alpha;	
+					
+					//draw the highlight in the correct index on the stage
+					var curind = stage.getChildIndex(sculptures[ind]);
+					stage.setChildIndex(this, curind+1);
 					
 				}
 				sculpturehl.update(sculpturehl.attInd);
@@ -166,6 +173,11 @@
 				topicTxt = new createjs.Text('', '25px Myriad Pro', 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
 				topicTxt.textAlign = 'center';
 				stage.addChild(topicTxt);				
+				//event handler if text is clicked on
+				topicTxt.addEventListener('mousedown', function(evt){
+					routeMe(topicTxt.text);
+				});
+				
 				
 				//update the stage initially
 				//stage.update();
@@ -182,10 +194,7 @@
 				//resizeCan();
 			});
 			
-			//function that runs when the loadqueue is completed
-			function handleComplete(){
-				//createjs.Sound.play('sound1');
-			}
+
 			//function that runs when progress is recorded in the preload
 			function progressTick(evt){
 				console.log(evt.progress*100 + "% loaded");
@@ -207,8 +216,8 @@
 					//o.x = $(canvas).width()/(ct-1) * i;
 					o.x =  (((canWid - (canWid * margin*2))/(ct-1))*i)+ (canWid * margin);
 					//frame the y range for placement
-					var yt = $(canvas).height()*.66;
-					var yb = $(canvas).height()*.33;
+					var yt = $(canvas).height()*.60;
+					var yb = $(canvas).height()*.30;
 					
 					
 					
@@ -286,12 +295,14 @@
 				}
 				if(p==sculptureCt){
 				//always draw the sculpture at the correct index
-					//stage.setChildIndex(sculptures[s], 0);
+					stage.setChildIndex(sculptures[s], 0);
 				}
 				if(p==0){
 				//always draw the sculpture at the correct index
-					//stage.setChildIndex(sculptures[s], sculptureCt);
+					stage.setChildIndex(sculptures[s], sculptureCt);
 				}
+				
+				
 			
 				//console.log('call!');
 				createjs.Tween.get(sculptures[s],
@@ -377,15 +388,15 @@
 			
 			//A function that move the attractor to any number of possible location options
 			function setAttractor(){
-				var scLast = sc;
-				//keep choosing a random sculpture until it's different than the last one.
-				while(sc == scLast){
-					sc = sculptures[Math.floor(Math.random()*sculptureCt)];
-				}
+
 				
 				createjs.Tween.get(sculpturehl, {override:true})
 				.to({alpha:0} ,500).call(function(){
-				
+					var scLast = sc;
+					//keep choosing a random sculpture until it's different than the last one.
+					while(sc == scLast){
+						sc = sculptures[Math.floor(Math.random()*sculptureCt)];
+					}
 				//need to sort this out so the sequence is correct...
 					createjs.Tween.get(topicTxt, {override:true})
 					.to({alpha:0}, 500)
@@ -393,8 +404,9 @@
 						sculpturehl.attInd = _.indexOf(sculptures, sc);
 						sculpturehl.topic = sculptures[sculpturehl.attInd].topic;
 						createjs.Tween.get(topicTxt, {override:true}).to({alpha:1}, 500);
+						createjs.Tween.get(sculpturehl,{override:true}).to({alpha:topAlpha}, 500);
 					});
-					createjs.Tween.get(sculpturehl,{override:true}).to({alpha:topAlpha}, 500);
+					
 				
 				});
 			}
