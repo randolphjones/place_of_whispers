@@ -150,6 +150,11 @@
 				whSize = 3/745 * w;
 				tSpeed = 6.5/745 * w;
 				
+				//tighten the swarm up a bit if the screen is really wide
+				if(w>1024){
+					tSpeed*=.8;
+				}
+				
 				
 				//add the drawing context to the stage
 				whsh.alpha=.95;

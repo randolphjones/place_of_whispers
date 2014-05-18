@@ -26,3 +26,10 @@ body{
 	font-size:2.5em;
 	font-family: Myriad Pro, Helvetica, Arial, sans-serif;
 }
+
+@media (max-width: 1024px){
+
+	#canHolder{
+		height:80%;
+	}
+}
