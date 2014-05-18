@@ -17,19 +17,23 @@ function buildRouter(){
 		
 		}, 
 		participate: function(){
-		
+			//dom manip logic goes here
 			console.log('participation page!');
 		},
 		experience: function(){
+			//dom manip logic goes here
 			console.log('experience page!');
 		},
 		about: function(){
+			//dom manip logic goes here
 			console.log('about page!');
 		},
 		schedule: function(){
+			//dom manip logic goes here
 			console.log('schedule page!');
 		},
 		gallery: function(){
+			//dom manip logic goes here
 			console.log('gallery page!');
 		}
 	});
