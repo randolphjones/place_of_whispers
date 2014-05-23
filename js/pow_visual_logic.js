@@ -65,7 +65,7 @@
 				//will eventually add logic to size and configure specifically for mobile.
 				w = $('#canHolder').width();
 				h = $('#canHolder').height()*.66;
-				$('#canHolder').append('<canvas id="whisperCan" width="'+w+'" height="'+h+'">You need an HTML5-enabled browser to view this content.</canvas>');
+				$('#canHolder').append('<canvas id=whisperCan width='+w+' height='+h+'>You need an HTML5-enabled browser to view this content.</canvas>');
 			
 			
 				
@@ -208,7 +208,7 @@
 
 			//function that runs when progress is recorded in the preload
 			function progressTick(evt){
-				console.log(evt.progress*100 + "% loaded");
+				console.log(evt.progress*100 + '% loaded');
 			}
 			
 			//helper function to resize canvas

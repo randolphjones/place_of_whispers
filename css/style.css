@@ -16,9 +16,11 @@ body{
 }
 
 #canHolder{
-	width:100%;
+	width:85%;
 	height:120%;
 	cursor: pointer;
+	margin-left:auto;
+	margin-right: auto;
 }
 #header{
 	width:100%;
