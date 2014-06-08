@@ -66,8 +66,13 @@
 				w = $('#canHolder').width();
 				h = $('#canHolder').height()*.66;
 				$('#canHolder').append('<canvas id=whisperCan width='+w+' height='+h+'>You need an HTML5-enabled browser to view this content.</canvas>');
-			
-			
+				
+				//the shade size needs to match the size the canvas holder so it can cover the canvas in a desirable fashion
+				//for desktop
+				$('#contentBox').width($('#canHolder').width()*.8);
+				$('#contentBox').height($(window).height()*.75);
+				
+				//include mobile logic here?
 				
 			
 				//define canvas and set up the stage

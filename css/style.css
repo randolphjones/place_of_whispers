@@ -1,6 +1,7 @@
 
 body{
 	font-size:18px;
+	font-family: Myriad Pro, Helvetica, Arial, sans-serif;
 }
 #whisperCan{
 
@@ -27,7 +28,35 @@ body{
 	height: 100px;
 	color: #444444;
 	font-size:2.5em;
-	font-family: Myriad Pro, Helvetica, Arial, sans-serif;
+	cursor:pointer;
+}
+
+#contentBox{
+	background-color: #FFFFFF;
+	/*add in extra transparency code here*/
+	opacity: 0.8;
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:100px;
+	z-index:200;
+	display:none;
+	right:10px;
+	border: 2px solid #DDDDDD;
+	color: #444444;
+	padding:35px;
+	overflow:auto;
+	font-size:1.3em;
+}
+#contentHeader{
+	font-size: 1.8em;
+	font-weight:bold;
+}
+#contentBody{
+	
+}
+#contentBack{
+	font-weight: bold;
 	cursor:pointer;
 }
 
