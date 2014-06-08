@@ -6,3 +6,11 @@ var contentEng = {
 	calendar: 'this is the text that goes on the calendar page',
 
 };
+var contentDeu = {
+	about: 'this is the text that goes on the about page',
+	gallery: 'this is the text that goes on the gallery page',
+	experience: 'this is the text that goes on the experience page',
+	participate: 'this is the text that goes on the participate page',
+	calendar: 'this is the text that goes on the calendar page',
+
+};
