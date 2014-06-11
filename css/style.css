@@ -5,6 +5,21 @@ body{
 	overflow:hidden;
 	height:100%;
 }
+
+.textlink{
+	text-decoration:none;
+	font-weight:bold;
+	color: #B9D8FA;
+}
+
+.textlink:hover{
+	color:#222;
+}
+
+.textlink:active{
+	color:#222;
+}
+
 #whisperCan{
 
 	/*width:100%;
@@ -18,19 +33,42 @@ body{
 	height:900px;
 }
 
+/* this is where you can resize the canvas/stage */
 #canHolder{
 	width:85%;
-	height:120%;
+	height:150%;
 	cursor: pointer;
 	margin-left:auto;
 	margin-right: auto;
+	position:relative;
+	/* use this number to shift the canvas up or down */
+	top:-100px;
 }
+/*this is the header box itself -- includes translator and title*/
 #header{
 	width:100%;
 	height: 100px;
 	color: #444444;
-	font-size:2.5em;
 	cursor:pointer;
+}
+/*this is just the text for the title*/
+#pageTitle{
+	position:relative;
+	left:0px;
+	top:0px;
+	font-size:2.5em;
+}
+/* this is the text base translation link */
+#translink{
+	position:relative;
+	float:right;
+	right:5px;
+	top:8px;
+	width:128px;
+	height:77px;
+	z-index: 250;
+	font-size:1.2em;
+	cursor: pointer;
 }
 #transflag{
 	position:relative;
@@ -44,10 +82,21 @@ body{
 	z-index: 250;
 }
 
+/* this is the whole content box */
 #contentBox{
 	background-color: #FFFFFF;
-	/*add in extra transparency code here*/
+	
+	/*opacity code*/
 	opacity: 0.8;
+	/* IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+	/* IE 5-7 */
+	filter: alpha(opacity=80);
+	/* Netscape */
+	-moz-opacity: 0.8;
+	/* Safari 1.x */
+	-khtml-opacity: 0.8;
+
 	width:80%;
 	height:75%;
 	position:absolute;
@@ -83,8 +132,18 @@ body{
 	width:100%;
 	height:100%;
 	background-color:#FFF;
-	/* need to expand to cross-compatible code here */
+	
+	/* opacity code */
 	opacity:.0;
+	/* IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	/* IE 5-7 */
+	filter: alpha(opacity=0);
+	/* Netscape */
+	-moz-opacity: 0.0;
+	/* Safari 1.x */
+	-khtml-opacity: 0.0;
+	
 	z-index:199;
 	display:none;
 }
@@ -95,4 +154,9 @@ body{
 	#canHolder{
 		height:80%;
 	}
+}
+
+/*iphone portrait*/
+@media (max-width: 640px){
+	
 }

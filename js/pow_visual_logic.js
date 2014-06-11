@@ -27,6 +27,19 @@
 			//waypoint / rotation speed
 			var speed =10000;
 			
+			//the top and bottom bounds of sculpture placement
+			//height drives the maping of alpha and scale of sculptures
+			var topBound = .60;
+			var bottomBound = .30;
+			
+			//minimum and maximum alpha for sculptures based on height
+			var minAlpha = .6;
+			var maxAlpha = 1.0;
+			
+			//minimum and maximum scale numbers for sculptures based on height
+			var minScale = .45;
+			var maxScale = .75;
+			
 			//highlighted sculpture sprite
 			var sculpturehl;
 			var topAlpha = .75;
@@ -75,13 +88,20 @@
 				h = $('#canHolder').height()*.66;
 				$('#canHolder').append('<canvas id=whisperCan width='+w+' height='+h+'>You need an HTML5-enabled browser to view this content.</canvas>');
 				
+				if($(window).width()<640){
+					/*
+					console.log('you must be on an ipad');
+					topBound *= .5;
+					*/
+				}
+				
 				//the shade size needs to match the size the canvas holder so it can cover the canvas in a desirable fashion
 				//for desktop
 				//$('#contentBox').width($('#canHolder').width()*.8);
 				//$('#contentBox').height($(window).height()*.75);
 				
 				//attach function to translate flag
-				$('#transflag').click(function(){
+				$('#translink').click(function(){
 					translate();
 				});
 				
@@ -228,8 +248,8 @@
 					//o.x = $(canvas).width()/(ct-1) * i;
 					o.x =  (((canWid - (canWid * margin*2))/(ct-1))*i)+ (canWid * margin);
 					//frame the y range for placement
-					var yt = $(canvas).height()*.60;
-					var yb = $(canvas).height()*.30;
+					var yt = $(canvas).height()*topBound;
+					var yb = $(canvas).height()*bottomBound;
 					
 					
 					
@@ -253,9 +273,9 @@
 							break;
 					}
 					//determine scaling and alpha based on y placement
-					o.scale = map_range(o.y, yb, yt, .45*canWid/sculptureScaleFac, .75*canWid/sculptureScaleFac);
+					o.scale = map_range(o.y, yb, yt, minScale*canWid/sculptureScaleFac, maxScale*canWid/sculptureScaleFac);
 					//o.scale = map_range(o.y, yb, yt, .45, .75);
-					o.alpha = map_range(o.y, yb, yt, .6, 1.0);
+					o.alpha = map_range(o.y, yb, yt, minAlpha, maxAlpha);
 					
 					//push the object to the end of the array
 					wp.push(o);

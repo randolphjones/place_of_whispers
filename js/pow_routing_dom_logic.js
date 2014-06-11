@@ -27,6 +27,7 @@ function buildRouter(){
 			generalIn(state, currentContent.participate);
 		},
 		experience: function(){
+			//this is where you would at least put a function in here that runs experience
 			state='experience';
 			generalIn(state, currentContent.experience);
 		},
@@ -41,6 +42,10 @@ function buildRouter(){
 		gallery: function(){
 			state='gallery';
 			generalIn(state, currentContent.gallery);
+			//fancy code goes here for view templating
+			//$('#contentBody').html('completely replace');
+			$('#contentBody').append('append content');
+
 		}
 	});
 	//initialize router and bind it to the history
