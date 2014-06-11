@@ -86,6 +86,7 @@ function generalOut(){
 		state='index';
 		//push the browser URL back to its previous state
 		window.history.back();
+		//window.location.href = baseUrl;
 	
 	});
 
@@ -134,7 +135,6 @@ function translate(){
 	
 	}
 	
-	console.log(currentLang);
 }
 
 //this swaps out any given label on a sculpture

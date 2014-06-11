@@ -59,7 +59,7 @@ body{
 	/*right:10px;*/
 	left:25px;
 	border: 2px solid #DDDDDD;
-	color: #444444;
+	color: #444444;n
 	padding:35px;
 	overflow:auto;
 	font-size:1.3em;
@@ -89,6 +89,7 @@ body{
 	display:none;
 }
 
+/*landscape ipad*/
 @media (max-width: 1024px){
 
 	#canHolder{

@@ -340,7 +340,7 @@
 			}
 			//this is the class for attached text to a sculpture
 			function sculptureText(content, color){
-				this.form = new createjs.Text(content, '25px Myriad Pro', color);
+				this.form = new createjs.Text(content, '25px Myriad Pro,Helvetica,Arial,sans-serif', color);
 				this.form.textAlign = 'right';
 				this.form.rotation = -90;
 				this.form.x = -18;
