@@ -2,6 +2,8 @@
 body{
 	font-size:18px;
 	font-family: Myriad Pro, Helvetica, Arial, sans-serif;
+	overflow:hidden;
+	height:100%;
 }
 #whisperCan{
 
@@ -30,23 +32,38 @@ body{
 	font-size:2.5em;
 	cursor:pointer;
 }
+#transflag{
+	position:relative;
+	float:right;
+	right:5px;
+	top:8px;
+	width:128px;
+	height:77px;
+	background-image: url('../images/de_flag.png');
+	background-repeat: none;
+	z-index: 250;
+}
 
 #contentBox{
 	background-color: #FFFFFF;
 	/*add in extra transparency code here*/
 	opacity: 0.8;
-	width:100%;
-	height:100%;
+	width:80%;
+	height:75%;
 	position:absolute;
+	margin-left:auto;
+	margin-right:auto;
 	top:100px;
 	z-index:200;
 	display:none;
-	right:10px;
+	/*right:10px;*/
+	left:25px;
 	border: 2px solid #DDDDDD;
 	color: #444444;
 	padding:35px;
 	overflow:auto;
 	font-size:1.3em;
+	
 }
 #contentHeader{
 	font-size: 1.8em;
@@ -58,6 +75,18 @@ body{
 #contentBack{
 	font-weight: bold;
 	cursor:pointer;
+}
+
+#shade{
+	position:fixed;
+	top:0px;
+	width:100%;
+	height:100%;
+	background-color:#FFF;
+	/* need to expand to cross-compatible code here */
+	opacity:.0;
+	z-index:199;
+	display:none;
 }
 
 @media (max-width: 1024px){

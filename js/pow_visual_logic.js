@@ -69,8 +69,13 @@
 				
 				//the shade size needs to match the size the canvas holder so it can cover the canvas in a desirable fashion
 				//for desktop
-				$('#contentBox').width($('#canHolder').width()*.8);
-				$('#contentBox').height($(window).height()*.75);
+				//$('#contentBox').width($('#canHolder').width()*.8);
+				//$('#contentBox').height($(window).height()*.75);
+				
+				//attach function to translate flag
+				$('#transflag').click(function(){
+					translate();
+				});
 				
 				//include mobile logic here?
 				
@@ -85,13 +90,34 @@
 				
 				//set up and position five images initially
 				for(var i=0; i<sculptureCt; i++){
-					//define each sculpture as a createjs bitmap
-					sculptures[i] = new createjs.Bitmap('images/sculpture.png');
-					sculptures[i].regX = 82;
-					sculptures[i].regY = 150;
+					
+					//define each sculpture as a createjs container
+					sculptures[i] = new createjs.Container();
+					
+					//store bitmaps inside that contain the visual of the sculpture
+					sculptures[i].bitmap = new sculptureBmp('images/sculpture.png');
+					sculptures[i].bitmapHl = new sculptureBmp('images/sculpture_hl.png');
+				
+					//assign a topic to the sculpture
+					//assign a text object to display the topic
 					if(topics[i]){
+						
+						//assign a topic to each sculpture in string form
 						sculptures[i].topic = topics[i];
+						
+						//store forms inside of each container now that contain the text and topics
+						sculptures[i].topicDisp = new sculptureText(sculptures[i].topic, 'rgb('+ 172 +','+172+','+172+')');
+						sculptures[i].topicDispHl = new sculptureText(sculptures[i].topic, 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
+						
+
 					}
+					
+					//hide the sculpture's highlight
+					sculptures[i].bitmapHl.form.alpha=0;
+					sculptures[i].topicDispHl.form.alpha=0;
+					
+					//add the different forms as container children so that they can be shown as part of the container
+					sculptures[i].addChild(sculptures[i].topicDisp.form, sculptures[i].bitmap.form, sculptures[i].topicDispHl.form, sculptures[i].bitmapHl.form);
 					
 					
 				}
@@ -107,13 +133,16 @@
 					sculptures[i].scaleX  = sculptures[i].scaleY = wayPoints[i].scale;
 					sculptures[i].alpha = wayPoints[i].alpha;
 					
-					stage.addChild(sculptures[i]);
 					
 					//add a placeholder for an event listener for each sculpture
 					sculptures[i].addEventListener('mousedown', function(evt){
-					routeMe(evt.currentTarget.topic);
+						routeMe(evt.currentTarget.topic);
 					});
+					
 				}
+				//add sculptures to the stage in a manual but deliberate fashion to prevent visual errors in layering
+				stage.addChild(sculptures[3], sculptures[1], sculptures[0], sculptures[2], sculptures[4]);
+				
 				//set each sculpture in motion with a recursive function
 				for(var i = 0; i < sculptureCt; i++){
 					if((i+1)>=sculptureCt){
@@ -122,30 +151,6 @@
 						rotateNext(i, i+1);
 					}
 				}
-				
-				//logic for the highlighted sculpture
-				sculpturehl = new createjs.Bitmap('images/sculpture_hl.png');
-				sculpturehl.regX = 82;
-				sculpturehl.regY = 150;
-				
-				//set the initial alpha value for the highlight to 0
-				sculpturehl.alpha = 0;
-				
-				//add a property to the highlight that holds the index value for the sculpture that the highlight will be attached to
-				sculpturehl.attInd = 0;
-				sculpturehl.update = function(ind){
-					this.x = sculptures[ind].x;
-					this.y = sculptures[ind].y;
-					this.scaleX = this.scaleY = sculptures[ind].scaleX;
-					//this.alpha = sculptures[ind].alpha;	
-					
-					//draw the highlight in the correct index on the stage
-					var curind = stage.getChildIndex(sculptures[ind]);
-					stage.setChildIndex(this, curind+1);
-					
-				}
-				sculpturehl.update(sculpturehl.attInd);
-				stage.addChild(sculpturehl);
 				
 				//initialize a context for drawing graphics dynamically for the whispers
 				whg =  new createjs.Graphics();
@@ -165,12 +170,6 @@
 				whsh.alpha=.95;
 				stage.addChild(whsh);
 				
-				
-				
-				//blurFilter = new createjs.BlurFilter(12, 12, 1);
-				
-				//whsh.filters = [blurFilter];
-				//whsh.cache(0,0,w,h);
 				//swarm logic
 				//set up a test attractor;
 				attractor = $V([200, 100]);
@@ -184,23 +183,15 @@
 					Math.random() * whSize));
 				}
 				
-				
-				//add the topic text as well
-				topicTxt = new createjs.Text('', '25px Myriad Pro', 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
-				topicTxt.textAlign = 'center';
-				stage.addChild(topicTxt);				
-				//event handler if text is clicked on
-				topicTxt.addEventListener('mousedown', function(evt){
-					routeMe(topicTxt.text);
-				});
-				
-				
 				//update the stage initially
 				//stage.update();
 				//set the ticker and framerate
 				createjs.Ticker.setFPS(frameRate);
 				createjs.Ticker.addEventListener('tick', drawNewFrame);
 				
+				//set the first sculpture's value. It can be any sculpture
+				sc=sculptures[0];
+				//set the attractor and then all of the subsequent ones at a regular interval
 				setAttractor();
 				setInterval(function(){ setAttractor()}, intervalSwitch);
 			});
@@ -218,10 +209,6 @@
 			
 			//helper function to resize canvas
 			function resizeCan(){
-				//$('#whisperCan').css('width', '100%');
-				//$('#whiserCan').css('height', '100%');
-				//$('#whisperCan').attr('width', window.innerWidth);
-				//$('#whisperCan').attr('height', window.innerHeight);
 			}
 			//calculate waypoint values based on a count
 			function calcWp(ct){
@@ -284,12 +271,8 @@
 				}
 				
 				//move the attractor to where it needs to go
+				
 				moveAttractor();
-				
-				//move and scale highlight per frame
-				
-				sculpturehl.update(sculpturehl.attInd);
-				
 				
 				stage.update();	
 				
@@ -320,7 +303,7 @@
 				
 				
 			
-				//console.log('call!');
+				//tween the sculpture between waypoints
 				createjs.Tween.get(sculptures[s],
 					{override:true,
 					//loop:true
@@ -331,7 +314,28 @@
 						scaleY: wayPoints[p].scale, 
 						alpha: wayPoints[p].alpha}, 
 						speed, createjs.Ease.linear)
-						.call(function(){rotateNext(s, p+1)});
+						.call(function(){
+							rotateNext(s, p+1);
+							//this keeps the appropriate sculpture in the front
+							if(p>=Math.floor(sculptureCt/2)){
+								var curind = stage.getChildIndex(sculptures[s]);
+								stage.setChildIndex(sculptures[s], curind+1);
+							}
+							});
+			}
+			//this is the class for the sculpture bitmaps 
+			function sculptureBmp(pth){
+				this.form = new createjs.Bitmap(pth);
+				this.form.regX = 82;
+				this.form.regY = 150;
+			}
+			//this is the class for attached text to a sculpture
+			function sculptureText(content, color){
+				this.form = new createjs.Text(content, '25px Myriad Pro', color);
+				this.form.textAlign = 'right';
+				this.form.rotation = -90;
+				this.form.x = -18;
+				//this.form.y = 150;
 			}
 			
 			//the class that constitutes a single whisper
@@ -348,9 +352,7 @@
 				this.size = s;
 				this.update = function(){
 					var ts = this.topSpeed;	
-					
-					//this.lastLocale = this.locale[0];
-					
+									
 					var dir = attractor.subtract(this.locale[tail-1]);
 					//normalize the vector
 					var length = Math.sqrt((dir.elements[0]*dir.elements[0])+(dir.elements[1] * dir.elements[1]));
@@ -369,18 +371,17 @@
 							return q;
 						}
 					});
-					//console.log(this.velocity.elements[0]);
+
 					this.locale.push( this.locale[tail-1].add(this.velocity));
 					this.locale.splice(0,1);
-					//this.locale = attractor;
-					//console.log('you\'ve been moved');
+
 					
 				}
 				
 				this.render = function(){
-					//console.log('you\'ve been rendered');
+					//this renders each whisper as a shape element
 					for(i=1; i<tail; i++){
-						//lolerz! windshield wipers!
+						
 						var lv = this.locale[i-1].elements;
 						var v = this.locale[i].elements;
 						
@@ -404,37 +405,34 @@
 			
 			//A function that move the attractor to any number of possible location options
 			function setAttractor(){
-
+			
+				var scLast = sc;
+				//keep choosing a random sculpture until it's different than the last one.
+				while(sc == scLast){
+					sc = sculptures[Math.floor(Math.random()*sculptureCt)];
+				}
 				
-				createjs.Tween.get(sculpturehl, {override:true})
-				.to({alpha:0} ,500).call(function(){
-					var scLast = sc;
-					//keep choosing a random sculpture until it's different than the last one.
-					while(sc == scLast){
-						sc = sculptures[Math.floor(Math.random()*sculptureCt)];
-					}
-				//need to sort this out so the sequence is correct...
-					createjs.Tween.get(topicTxt, {override:true})
-					.to({alpha:0}, 500)
-					.call(function(){
-						sculpturehl.attInd = _.indexOf(sculptures, sc);
-						sculpturehl.topic = sculptures[sculpturehl.attInd].topic;
-						createjs.Tween.get(topicTxt, {override:true}).to({alpha:1}, 500);
-						createjs.Tween.get(sculpturehl,{override:true}).to({alpha:topAlpha}, 500);
-					});
-					
-				
-				});
+				//this tween fades out the highlight color on a sculpture and fades it in on the next chose one.
+				createjs.Tween.get(scLast.bitmapHl.form, {override:true})
+						.to({alpha:0}, 500)
+						.call(function(){
+												
+							createjs.Tween.get(sc.bitmapHl.form, {override:true})
+								.to({alpha:1},500);
+						});
+				createjs.Tween.get(scLast.topicDispHl.form, {override:true})
+						.to({alpha:0}, 500)
+						.call(function(){
+												
+							createjs.Tween.get(sc.topicDispHl.form, {override:true})
+								.to({alpha:1},500);
+						});
+						
 			}
 			
 			function moveAttractor(){
-				
+				//move the attractor to keep up with the sculpture on each frame
 				attractor = $V([sc.x, sc.y]);
 			
-				//change topic text
-				topicTxt.x = sculpturehl.x;
-				topicTxt.text = sculpturehl.topic;
-				//topicTxt.y = attractor.elements[1];
-				
 				
 			}
