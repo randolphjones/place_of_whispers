@@ -7,12 +7,16 @@
 			var h;
 			var sculptures = [];
 			var sculptureCt = 5;
-			//names of sculptures/routes
-			var topics = ['participate',
+			//names of sculptures/routes - start with english content
+			/*var topics = ['participate',
 			'experience',
 			'about',
 			'schedule',
 			'gallery',]
+			*/
+			
+			var topics;
+			
 			
 			//scale factor for the sculptures based on a normal screen width
 			var sculptureScaleFac = 670;
@@ -59,6 +63,10 @@
 			// Set a function to run on document load
 			$(document).ready(function(){
 				buildRouter();
+				
+				
+				//set default english topics
+				topics = contentEng.topics;
 			
 				//sizing logic
 				//only works for a desktop with a horizontal aspect ratio right now
@@ -84,6 +92,7 @@
 				canvas = $('#whisperCan')[0];
 				resizeCan();
 				stage = new createjs.Stage(canvas);
+				
 				
 				//set up waypoints for tweening
 				wayPoints = calcWp(sculptureCt);

@@ -23,29 +23,24 @@ function buildRouter(){
 		
 		}, 
 		participate: function(){
-			state='participate';
-			console.log('participation page!');
-			generalIn('participate', currentLang.participate);
+			state='participate';	
+			generalIn(state, currentContent.participate);
 		},
 		experience: function(){
 			state='experience';
-			console.log('experience page!');
-			generalIn('experience', currentLang.experience);
+			generalIn(state, currentContent.experience);
 		},
 		about: function(){
 			state='about';
-			console.log('about page!');
-			generalIn('about', currentLang.about);
+			generalIn(state, currentContent.about);
 		},
 		schedule: function(){
 			state='schedule';
-			console.log('schedule page!');
-			generalIn('schedule', currentLang.schedule);
+			generalIn(state, currentContent.schedule);
 		},
 		gallery: function(){
 			state='gallery';
-			console.log('gallery page!');
-			generalIn('gallery', currentLang.gallery);
+			generalIn(state, currentContent.gallery);
 		}
 	});
 	//initialize router and bind it to the history
@@ -69,9 +64,11 @@ function routeMe(t){
 
 
 //this function happens universally on any page state change or route IN
-function generalIn(title, content){
-	//fade in the shade on top of the canvas
-	$('#contentHeader').html(title);
+function generalIn(title, content){	
+	//just make sure you retrieve the content page title in the correct language
+	var ind = _.indexOf(contentEng.topics, title);
+	$('#contentHeader').html(currentContent.topics[ind]);
+	
 	$('#contentBody').html(content);
 	$('#shade').fadeIn(500, function(){
 		//push the browser URL back to its previous state
@@ -109,8 +106,12 @@ function translate(){
 			currentContent = contentDeu;
 			
 			//swap sculpture labels
-			
+			_.each(sculptures, function(s){
+				swapLabel(s);
+			});
 			//swap content
+			swapContent();
+			
 			
 			break;
 		case 'de':
@@ -122,8 +123,11 @@ function translate(){
 			currentLang='en';
 			
 			//swap sculpture labels
-			
+			_.each(sculptures, function(s){
+				swapLabel(s);
+			});
 			//swap content
+			swapContent();
 			
 			break;
 		
@@ -133,8 +137,23 @@ function translate(){
 	console.log(currentLang);
 }
 
-//this is a universal function that populates content of Dom objects
-function populateContent(){
+//this swaps out any given label on a sculpture
+function swapLabel(s){
+	var ind = _.indexOf(contentEng.topics, s.topic);
+	s.topicDisp.form.text = currentContent.topics[ind];
+	s.topicDispHl.form.text = currentContent.topics[ind];
+	if(s.topic == state){
+		$('#contentHeader').html(currentContent.topics[ind]);
+	}
+}
 
+
+
+//this is a universal function that swaps content of Dom objects
+function swapContent(){
+	var key = _.pick(currentContent, state);
+	var val = _.values(key);
+	$('#contentBody').html(val[0]);
 
 }
+

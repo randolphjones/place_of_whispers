@@ -1,4 +1,5 @@
 var contentEng = {
+	topics: ['participate', 'experience', 'about', 'schedule', 'gallery'],
 	about: 'this is the text that goes on the about page',
 	gallery: 'this is the text that goes on the gallery page',
 	experience: 'this is the text that goes on the experience page',
@@ -7,10 +8,11 @@ var contentEng = {
 
 };
 var contentDeu = {
-	about: 'this is the text that goes on the about page',
-	gallery: 'this is the text that goes on the gallery page',
-	experience: 'this is the text that goes on the experience page',
-	participate: 'this is the text that goes on the participate page',
-	calendar: 'this is the text that goes on the calendar page',
+	topics: ['teilnahme', 'erfahrungen', 'informationen', 'zeitplan', 'galerie'],
+	about: 'Dies ist der Text, geht auf die Seite Über',
+	gallery: 'Dies ist der Text, geht auf die Seite der Gallery',
+	experience: 'Dies ist der Text, geht auf die Erfahrung Seite',
+	participate: 'Dies ist der Text, geht auf die Teilnahme an Seit',
+	calendar: 'Dies ist der Text, geht auf die Seite Terminkalender',
 
 };
