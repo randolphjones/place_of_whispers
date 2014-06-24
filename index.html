@@ -21,9 +21,22 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		
 		<!-- here is where the content template goes for the tumblr mashup-->
+		<!-- this HTML formats each audio player -->
 		<script type="text/template" id="audTemp">
-			<div><%= player %></div>
-			<div><%= title %> </div>
+			<div class="thumbhold"><%= player %><br><%= track_name %></div>
+			
+		</script>
+		
+		<!-- this HTML formats each photo thumbnail -->
+		<script type="text/template" id="phoTemp">
+			<div class="thumbhold"><a border="0" href="<%= short_url %>" target="_blank"><img class="phoThumb" src="<%= photos[0].alt_sizes[5].url %>"></a></div>
+			
+		</script>
+		
+		<!-- this HTML formats each video link -->
+		<script type="text/template" id="vidTemp">
+			<div class="thumbhold"><a border="0" href="<%= short_url %>" target="_blank"><img height="85" class="phoThumb" src="<%= thumbnail_url %>"></a></div>
+		
 		</script>
 		
 	</head>

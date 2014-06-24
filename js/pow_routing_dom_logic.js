@@ -41,11 +41,12 @@ function buildRouter(){
 		},
 		gallery: function(){
 			state='gallery';
-			generalIn(state, currentContent.gallery);
+			//generalIn(state, currentContent.gallery);
+			generalIn(state, galView);
 			//fancy code goes here for view templating
 			//$('#contentBody').html('completely replace');
-			$('#contentBody').append('append content');
-
+			//popGallery(galView);
+			
 		}
 	});
 	//initialize router and bind it to the history
@@ -70,6 +71,8 @@ function routeMe(t){
 
 //this function happens universally on any page state change or route IN
 function generalIn(title, content){	
+	//clear content
+	$('#contentBody').html('');
 	//just make sure you retrieve the content page title in the correct language
 	var ind = _.indexOf(contentEng.topics, title);
 	$('#contentHeader').html(currentContent.topics[ind]);

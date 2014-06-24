@@ -75,8 +75,12 @@
 			
 			// Set a function to run on document load
 			$(document).ready(function(){
+				//set up the router initially
 				buildRouter();
 				
+				
+				//grab tumblr results for gallery
+				grabResults(type);
 				
 				//set default english topics
 				topics = contentEng.topics;
@@ -107,6 +111,7 @@
 				
 				//include mobile logic here?
 				
+				//this is probably where I would start abstracting for a dedicated stage setup
 			
 				//define canvas and set up the stage
 				canvas = $('#whisperCan')[0];

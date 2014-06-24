@@ -98,7 +98,7 @@ body{
 	-khtml-opacity: 0.8;
 
 	width:80%;
-	height:75%;
+	height:80%;
 	position:absolute;
 	margin-left:auto;
 	margin-right:auto;
@@ -112,18 +112,26 @@ body{
 	padding:35px;
 	overflow:auto;
 	font-size:1.3em;
+	padding:10px;
 	
 }
 #contentHeader{
 	font-size: 1.8em;
 	font-weight:bold;
+	clear:both;
 }
 #contentBody{
-	
+	padding-top:35px
 }
 #contentBack{
+	padding-top:35px;
 	font-weight: bold;
 	cursor:pointer;
+}
+
+.contentSubtitle{
+	padding-top: 20px;
+	font-size:1.3em;
 }
 
 #shade{
@@ -146,6 +154,19 @@ body{
 	
 	z-index:199;
 	display:none;
+}
+.phoThumb{
+	padding:8px;
+}
+.thumbhold{
+	position:relative;
+	float:left;
+	display:inline;
+}
+.allThumbs{
+	clear:both;
+	width:100%;
+	height:90px;
 }
 
 /*landscape ipad*/
