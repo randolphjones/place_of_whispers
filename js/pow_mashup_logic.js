@@ -43,7 +43,7 @@ function jsonParse(d){
 	//push the right views into the string
 	var count = 0;
 	_.each(d.response.posts, function(p){
-		console.log(p);
+		//console.log(p);
 		
 		if(count<limit){
 			galView = galView + _.template(templ, p);
@@ -71,7 +71,8 @@ function jsonParse(d){
 //this function populates the gallery with the latest items
 function popGallery(g){
 	//stuff the gallery DOM into the content page
-	$('#contentBody').html(galView);
-	
+	if(state == 'gallery'){
+		$('#contentBody').html(galView);
+	}
 	
 }

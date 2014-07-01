@@ -76,25 +76,25 @@ function generalIn(title, content){
 	//just make sure you retrieve the content page title in the correct language
 	var ind = _.indexOf(contentEng.topics, title);
 	$('#contentHeader').html(currentContent.topics[ind]);
-	
 	$('#contentBody').html(content);
 	$('#shade').fadeIn(500, function(){
 		//push the browser URL back to its previous state
 		$('#contentBox').fadeIn(500);
 
 	});
+	//console.log(content);
 	
 }
 //this function happens universally to return the page back home
 function generalOut(){
 	//fade content
-	
 	$('#contentBox').fadeOut(500, function(){
 		$('#shade').fadeOut(500);
 		state='index';
 		//push the browser URL back to its previous state
 		window.history.back();
 		//window.location.href = baseUrl;
+		//console.log('complete');
 	
 	});
 
@@ -162,6 +162,5 @@ function swapContent(){
 	var key = _.pick(currentContent, state);
 	var val = _.values(key);
 	$('#contentBody').html(val[0]);
-
 }
 
