@@ -164,3 +164,27 @@ function swapContent(){
 	$('#contentBody').html(val[0]);
 }
 
+//this function pops up a light box with a selected image or video
+function lightbox(u){
+	//store lightbox inside of a jquery object to most efficiently use resources
+	var l = $('#lightbox');
+	
+	//resize the lightbox window to appropriately fit the screen
+	l.height(Math.ceil($(window).innerHeight()*.8));
+	l.width(Math.ceil($(window).innerWidth()*.8));
+	
+	//fill it with the appropriate content based on a URL
+	var lightTemp = '<img id="lightboxImg" src='+u+' onclick="lightboxOut()">';
+	l.html(lightTemp);
+	//now fade it in
+	l.fadeIn(500);
+	$('#strongShade').fadeIn(500);
+	console.log(u);	
+	
+}
+function lightboxOut(){
+	$('#strongShade').fadeOut(500);
+	$('#lightbox').fadeOut(500);
+	console.log('closing lightbox');
+}
+

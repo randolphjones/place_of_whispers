@@ -29,7 +29,7 @@
 		
 		<!-- this HTML formats each photo thumbnail -->
 		<script type="text/template" id="phoTemp">
-			<div class="thumbhold"><a border="0" href="<%= short_url %>" target="_blank"><img class="phoThumb" src="<%= photos[0].alt_sizes[5].url %>"></a></div>
+			<div class="thumbhold"><img class="phoThumb" src="<%= photos[0].alt_sizes[5].url %>"onclick="lightbox('<%= photos[0].original_size.url %>')"></div>
 			
 		</script>
 		
@@ -46,6 +46,7 @@
 				<span id="pageTitle">The Place of Whispers</span>
 				<div id="translink">de | en</div>
 			</div>
+			
 			<div id="contentBox">
 				<div id="contentHeader">
 				Header
@@ -60,10 +61,17 @@
 			<div id="canHolder">
 				<!--<canvas id=whisperCan width=900 height=360>You need an HTML5-enabled browser to view this content.</canvas>-->
 			</div>
+			<div id="lightbox">
+				this is the lightbox
+		</div>
 		</div>
 		<div id="shade" onclick='generalOut()'>
 		
 		</div>
+		<div id="strongShade" onclick='lightboxOut()'>
+		
+		</div>
+		
 	</body>
 
 </html>

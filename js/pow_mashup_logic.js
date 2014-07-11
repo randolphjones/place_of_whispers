@@ -73,6 +73,6 @@ function popGallery(g){
 	//stuff the gallery DOM into the content page
 	if(state == 'gallery'){
 		$('#contentBody').html(galView);
-	}
-	
+
+		}
 }
