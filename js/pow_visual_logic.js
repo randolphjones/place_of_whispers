@@ -78,12 +78,11 @@
 				//set up the router initially
 				buildRouter();
 				
-				
 				//grab tumblr results for gallery
 				grabResults(type);
 				
 				//set default english topics
-				topics = contentEng.topics;
+				topics = currentContent.topics;
 			
 				//sizing logic
 				//only works for a desktop with a horizontal aspect ratio right now

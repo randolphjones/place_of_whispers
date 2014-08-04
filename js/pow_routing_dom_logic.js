@@ -8,11 +8,16 @@ var baseurl;
 //keep track of the state
 var state = 'index';
 
-//specify the current language content object. Default to english
+//specify the current language content object. Default to German
 var currentLang = 'en';
 var currentContent = contentEng;
 
 function buildRouter(){
+	//translate to default language
+	//currentLang = 'de';
+	//currentContent = contentDeu;
+	translate();
+
 	var Router = Backbone.Router.extend({
 		routes: {
 			'participate': 'participate',
@@ -104,7 +109,7 @@ function generalOut(){
 function translate(){
 	//grab the flag image name
 	//translate content
-	
+
 	switch(currentLang){
 		case 'en':
 			//switch to german
@@ -128,6 +133,8 @@ function translate(){
 			$('#transflag').css('background-image', 'url(images/de_flag.png)');
 			
 			//swap language objects
+			
+			//??
 			currentContent = contentEng;
 			currentLang='en';
 			
