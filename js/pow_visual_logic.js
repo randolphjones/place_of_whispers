@@ -82,7 +82,7 @@
 				grabResults(type);
 				
 				//set default english topics
-				topics = currentContent.topics;
+				topics = contentEng.topics;
 			
 				//sizing logic
 				//only works for a desktop with a horizontal aspect ratio right now
@@ -139,8 +139,10 @@
 						sculptures[i].topic = topics[i];
 						
 						//store forms inside of each container now that contain the text and topics
-						sculptures[i].topicDisp = new sculptureText(sculptures[i].topic, 'rgb('+ 172 +','+172+','+172+')');
-						sculptures[i].topicDispHl = new sculptureText(sculptures[i].topic, 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
+						//sculptures[i].topicDisp = new sculptureText(sculptures[i].topic, 'rgb('+ 172 +','+172+','+172+')');
+						//sculptures[i].topicDispHl = new sculptureText(sculptures[i].topic, 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
+						sculptures[i].topicDisp = new sculptureText(currentContent.topics[i], 'rgb('+ 172 +','+172+','+172+')');
+						sculptures[i].topicDispHl = new sculptureText(currentContent.topics[i], 'rgb('+whrgb[0]+','+whrgb[1]+','+whrgb[2]+')');
 						
 
 					}

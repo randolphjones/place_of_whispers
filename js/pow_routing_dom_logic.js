@@ -9,14 +9,14 @@ var baseurl;
 var state = 'index';
 
 //specify the current language content object. Default to German
-var currentLang = 'en';
-var currentContent = contentEng;
+var currentLang = 'de';
+var currentContent = contentDeu;
 
 function buildRouter(){
 	//translate to default language
 	//currentLang = 'de';
 	//currentContent = contentDeu;
-	translate();
+	//translate();
 
 	var Router = Backbone.Router.extend({
 		routes: {
@@ -69,6 +69,7 @@ function buildRouter(){
 
 //build a URL from the appropriate topic
 function routeMe(t){
+	
 	window.location.href = baseurl + '#' + t;
 
 }
@@ -109,7 +110,7 @@ function generalOut(){
 function translate(){
 	//grab the flag image name
 	//translate content
-
+	popGallery(galView);
 	switch(currentLang){
 		case 'en':
 			//switch to german
